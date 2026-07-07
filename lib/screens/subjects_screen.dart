@@ -1,111 +1,186 @@
 import 'package:flutter/material.dart';
 
+import '../models/subject_model.dart';
+import '../services/firestore_service.dart';
+import '../widgets/add_subject_dialog.dart';
+import '../widgets/subject_card.dart';
+
 class SubjectsScreen extends StatelessWidget {
-  const SubjectsScreen({super.key});
+  SubjectsScreen({super.key});
+
+  final FirestoreService firestoreService = FirestoreService();
+
+  Future<void> _addSubject(BuildContext context) async {
+    final Map<String, dynamic>? result =
+    await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => const AddSubjectDialog(),
+    );
+
+    if (result == null) return;
+
+    SubjectModel subject = SubjectModel(
+      id: '',
+      name: result["name"],
+      color: result["color"],
+      weeklyGoal: result["goal"],
+    );
+
+    await firestoreService.addSubject(subject);
+  }
+
+  Future<void> _editSubject(
+      BuildContext context,
+      SubjectModel subject,
+      ) async {
+    final Map<String, dynamic>? result =
+    await showDialog<Map<String, dynamic>>(
+      context: context,
+      builder: (context) => AddSubjectDialog(
+        subject: subject,
+      ),
+    );
+
+    if (result == null) return;
+
+    SubjectModel updatedSubject = SubjectModel(
+      id: subject.id,
+      name: result["name"],
+      color: result["color"],
+      weeklyGoal: result["goal"],
+    );
+
+    await firestoreService.updateSubject(updatedSubject);
+  }
+
+  Future<void> _deleteSubject(String id) async {
+    await firestoreService.deleteSubject(id);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEAF7F3),
+
       appBar: AppBar(
         title: const Text("Subjects"),
         centerTitle: true,
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "My Subjects",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
 
-              const SizedBox(height: 8),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+        onPressed: () => _addSubject(context),
+        child: const Icon(Icons.add),
+      ),
 
-              const Text(
-                "Organize your study subjects here.",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
-              ),
+      body: StreamBuilder<List<SubjectModel>>(
+        stream: firestoreService.getSubjects(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
 
-              const SizedBox(height: 30),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.menu_book_rounded,
-                      size: 70,
-                      color: Colors.teal.shade700,
-                    ),
+          final subjects = snapshot.data ?? [];
 
-                    const SizedBox(height: 15),
+          if (subjects.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.menu_book,
+                    size: 80,
+                    color: Colors.grey,
+                  ),
 
-                    const Text(
-                      "No Subjects Added",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  SizedBox(height: 20),
 
-                    const SizedBox(height: 10),
-
-                    const Text(
-                      "Create your first subject to begin planning your studies.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                  label: const Text(
-                    "Add Subject",
+                  Text(
+                    "No Subjects Added",
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+
+                  SizedBox(height: 10),
+
+                  Text(
+                    "Tap the + button to add your first subject.",
+                    style: TextStyle(
+                      color: Colors.grey,
                     ),
                   ),
-                ),
+                ],
               ),
+            );
+          }
 
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
+          return ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: subjects.length,
+            itemBuilder: (context, index) {
+              final subject = subjects[index];
+
+              return SubjectCard(
+                subject: subject,
+
+                onEdit: () {
+                  _editSubject(
+                    context,
+                    subject,
+                  );
+                },
+
+                onDelete: () async {
+                  final delete = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Delete Subject"),
+                      content: Text(
+                        "Are you sure you want to delete ${subject.name}?",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: const Text("Cancel"),
+                        ),
+
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: const Text("Delete"),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (delete == true) {
+                    _deleteSubject(subject.id);
+                  }
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }

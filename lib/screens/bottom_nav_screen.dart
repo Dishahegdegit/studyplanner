@@ -17,12 +17,12 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomeScreen(),
-    ScheduleScreen(),
+  final List<Widget> _pages = [
+    const HomeScreen(),
+    const ScheduleScreen(),
     SubjectsScreen(),
-    StatisticsScreen(),
-    ProfileScreen(),
+    const StatisticsScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
