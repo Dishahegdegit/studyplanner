@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../models/subject_model.dart';
-import '../services/firestore_service.dart';
+import '../services/subject_service.dart';
 import '../widgets/add_subject_dialog.dart';
 import '../widgets/subject_card.dart';
+import '../utils/app_colors.dart';
 
 class SubjectsScreen extends StatelessWidget {
   SubjectsScreen({super.key});
 
-  final FirestoreService firestoreService = FirestoreService();
-
+  final SubjectService subjectService = SubjectService();
   Future<void> _addSubject(BuildContext context) async {
     final Map<String, dynamic>? result =
     await showDialog<Map<String, dynamic>>(
@@ -26,7 +26,7 @@ class SubjectsScreen extends StatelessWidget {
       weeklyGoal: result["goal"],
     );
 
-    await firestoreService.addSubject(subject);
+    await subjectService.addSubject(subject);
   }
 
   Future<void> _editSubject(
@@ -50,34 +50,34 @@ class SubjectsScreen extends StatelessWidget {
       weeklyGoal: result["goal"],
     );
 
-    await firestoreService.updateSubject(updatedSubject);
+    await subjectService.updateSubject(updatedSubject);
   }
 
   Future<void> _deleteSubject(String id) async {
-    await firestoreService.deleteSubject(id);
+    await subjectService.deleteSubject(id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF7F3),
+      backgroundColor: AppColors.background,
 
       appBar: AppBar(
         title: const Text("Subjects"),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.teal,
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         onPressed: () => _addSubject(context),
         child: const Icon(Icons.add),
       ),
 
       body: StreamBuilder<List<SubjectModel>>(
-        stream: firestoreService.getSubjects(),
+        stream: subjectService.getSubjects(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(

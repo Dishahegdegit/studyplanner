@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/subject_model.dart';
+import '../utils/app_colors.dart';
 
 class SubjectCard extends StatelessWidget {
   final SubjectModel subject;
@@ -52,8 +53,8 @@ class SubjectCard extends StatelessWidget {
 
                   Text(
                     "Weekly Goal: ${subject.weeklyGoal} hrs",
-                    style: const TextStyle(
-                      color: Colors.black54,
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],

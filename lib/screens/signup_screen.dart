@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../utils/app_colors.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -19,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _errorMessage;
 
   Future<void> _handleSignup() async {
-    FocusScope.of(context).unfocus();
+    FocusScope.of(context).unfocus(); //Closes keyboard before processing.
 
     if (_emailController.text.trim().isEmpty) {
       setState(() {
@@ -68,8 +69,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (!mounted) return;
 
-    if (error == null) {
-      Navigator.pop(context);
+    if (error == null) { // means successful signup
+      Navigator.pop(context); //after signup remove tht screen
     } else {
       setState(() {
         _isLoading = false;
@@ -89,11 +90,11 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF7F3),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text("Create Account"),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: AppColors.nightBordeaux,
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -111,31 +112,31 @@ class _SignupScreenState extends State<SignupScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
 
-                    const Icon(
+                    Icon(
                       Icons.person_add_alt_1,
-                      color: Colors.teal,
+                      color: AppColors.nightBordeaux,
                       size: 65,
                     ),
 
                     const SizedBox(height: 15),
 
-                    const Text(
+                    Text(
                       "Create Account",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.teal,
+                        color: AppColors.nightBordeaux,
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
-                    const Text(
+                    Text(
                       "Let's start your study journey!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: AppColors.textSecondary,
                         fontSize: 16,
                       ),
                     ),
@@ -147,10 +148,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         prefixIcon:
-                        const Icon(Icons.email, color: Colors.teal),
+                        Icon(Icons.email, color: AppColors.primary),
                         labelText: "Email",
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: AppColors.card,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -164,10 +165,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon:
-                        const Icon(Icons.lock, color: Colors.teal),
+                        Icon(Icons.lock, color: AppColors.primary),
                         labelText: "Password",
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: AppColors.card,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -181,10 +182,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon:
-                        const Icon(Icons.lock_outline, color: Colors.teal),
+                        Icon(Icons.lock_outline, color: AppColors.primary),
                         labelText: "Confirm Password",
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: AppColors.card,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -197,7 +198,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.red.shade50,
+                          color: AppColors.mauveShadow.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
@@ -215,7 +216,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     _isLoading
                         ? const Center(
                       child: CircularProgressIndicator(
-                        color: Colors.teal,
+                        color: AppColors.nightBordeaux,
                       ),
                     )
                         : SizedBox(
@@ -223,7 +224,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: ElevatedButton(
                         onPressed: _handleSignup,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
+                          backgroundColor: AppColors.nightBordeaux,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -245,10 +246,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text(
+                      child: Text(
                         "Already have an account? Log In",
                         style: TextStyle(
-                          color: Colors.teal,
+                          color: AppColors.nightBordeaux,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

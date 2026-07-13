@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance; //creates ONE authentication service.
 
   Stream<User?> get userChanges => _auth.authStateChanges();
 
@@ -10,7 +10,7 @@ class AuthService {
   Future<String?> signUp(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
-        email: email.trim(),
+        email: email.trim(), //trims spaces
         password: password,
       );
 

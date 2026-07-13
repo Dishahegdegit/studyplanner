@@ -3,9 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/subject_model.dart';
 
-class FirestoreService {
+class SubjectService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   User? get currentUser => _auth.currentUser;
@@ -17,13 +16,9 @@ class FirestoreService {
         .collection('subjects');
   }
 
-  // ---------------- ADD SUBJECT ----------------
-
   Future<void> addSubject(SubjectModel subject) async {
     await _subjectCollection.add(subject.toMap());
   }
-
-  // ---------------- GET SUBJECTS ----------------
 
   Stream<List<SubjectModel>> getSubjects() {
     return _subjectCollection.snapshots().map((snapshot) {
@@ -36,13 +31,9 @@ class FirestoreService {
     });
   }
 
-  // ---------------- UPDATE SUBJECT ----------------
-
   Future<void> updateSubject(SubjectModel subject) async {
     await _subjectCollection.doc(subject.id).update(subject.toMap());
   }
-
-  // ---------------- DELETE SUBJECT ----------------
 
   Future<void> deleteSubject(String id) async {
     await _subjectCollection.doc(id).delete();

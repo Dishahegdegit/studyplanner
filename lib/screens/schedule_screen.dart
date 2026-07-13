@@ -1,112 +1,232 @@
 import 'package:flutter/material.dart';
 
+import '../models/task_model.dart';
+import '../services/task_service.dart';
+import '../widgets/add_task_dialog.dart';
+import '../widgets/task_card.dart';
+import '../utils/app_colors.dart';
+
 class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({super.key});
+ScheduleScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEAF7F3),
-      appBar: AppBar(
-        title: const Text("Schedule"),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Today's Schedule",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+final TaskService taskService = TaskService();
 
-              const SizedBox(height: 8),
+Future<void> _addTask(BuildContext context) async {
+final Map<String, dynamic>? result =
+await showDialog<Map<String, dynamic>>(
+context: context,
+builder: (_) => const AddTaskDialog(),
+);
 
-              const Text(
-                "Manage your daily study tasks.",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
-              ),
+if (result == null) return;
 
-              const SizedBox(height: 30),
+ TaskModel task = TaskModel(
+ id: '',    //firestore generates id automatically
+ title: result['title'],
+ subjectId: result['subjectId'],
+ subjectName: result['subjectName'],
+ date: result['date'],
+ startTime: result['startTime'],
+ endTime: result['endTime'],
+ priority: result['priority'],
+ completed: false,
+);
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.calendar_month,
-                      size: 70,
-                      color: Colors.teal.shade700,
-                    ),
+ await taskService.addTask(task);
+}
 
-                    const SizedBox(height: 15),
+Future<void> _editTask(BuildContext context, TaskModel task,) async {
 
-                    const Text(
-                      "No Tasks Yet",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+final Map<String, dynamic>? result =
+ await showDialog<Map<String, dynamic>>(
+ context: context,
+ builder: (_) => AddTaskDialog(
+ task: task,       //sends the existing task into the dialog.
 
-                    const SizedBox(height: 10),
 
-                    const Text(
-                      "Tap the button below to create your first study task.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+ ),
+);
 
-              const SizedBox(height: 30),
+if (result == null) return;
 
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                  label: const Text(
-                    "Add Study Task",
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                ),
-              ),
+TaskModel updatedTask = TaskModel(
+id: task.id,
+title: result['title'],
+subjectId: result['subjectId'],
+subjectName: result['subjectName'],
+date: result['date'],
+startTime: result['startTime'],
+endTime: result['endTime'],
+priority: result['priority'],
+completed: task.completed,
+);
 
-              const SizedBox(height: 20),
-            ],
-          ),
+await taskService.updateTask(updatedTask);
+}
+
+Future<void> _deleteTask(String id) async {
+await taskService.deleteTask(id);
+}
+
+Future<void> _toggleTask(TaskModel task) async {
+await taskService.toggleTaskCompletion(
+task.id,
+!task.completed,
+);
+}
+
+@override
+Widget build(BuildContext context) {
+return Scaffold(
+  backgroundColor: AppColors.background,
+
+appBar: AppBar(
+title: const Text("Study Schedule"),
+centerTitle: true,
+  backgroundColor: AppColors.primary,
+foregroundColor: Colors.white,
+),
+
+body: StreamBuilder<List<TaskModel>>(
+stream: taskService.getTasks(),
+
+builder: (context, snapshot) {
+
+if (snapshot.connectionState == ConnectionState.waiting) {
+return const Center(
+child: CircularProgressIndicator(),
+);
+}
+
+if (snapshot.hasError) {
+return Center(
+child: Text(
+snapshot.error.toString(),
+),
+);
+}
+
+final tasks = snapshot.data ?? [];
+
+if (tasks.isEmpty) {
+return const Center(
+child: Column(
+mainAxisSize: MainAxisSize.min,
+children: [
+
+Icon(
+Icons.event_note,
+size: 80,
+color: Colors.grey,
+),
+
+SizedBox(height: 20),
+
+Text(
+"No Tasks Yet",
+style: TextStyle(
+fontSize: 22,
+fontWeight: FontWeight.bold,
+),
+),
+
+SizedBox(height: 10),
+
+Text(
+"Tap + to add your first study task.",
+style: TextStyle(
+color: Colors.grey,
+),
+),
+
+],
+),
+);
+}
+
+return ListView.builder(
+padding: const EdgeInsets.all(20),
+itemCount: tasks.length,
+
+itemBuilder: (context, index) {
+
+final task = tasks[index];
+return TaskCard(
+  task: task,
+
+  onEdit: () {
+    _editTask(
+      context,
+      task,
+    );
+  },
+
+  onDelete: () async {
+    final bool? delete =
+    await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text(
+          "Delete Task",
         ),
+        content: Text(
+          "Are you sure you want to delete '${task.title}'?",
+        ),
+        actions: [
+
+          TextButton(
+            onPressed: () {
+              Navigator.pop(
+                context,
+                false,
+              );
+            },
+            child: const Text(
+              "Cancel",
+            ),
+          ),
+
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(
+                context,
+                true,
+              );
+            },
+            child: const Text(
+              "Delete",
+            ),
+          ),
+        ],
       ),
     );
-  }
+
+    if (delete == true) {
+      _deleteTask(task.id);
+    }
+  },
+
+  onCompleted: (value) {
+    _toggleTask(task);
+  },
+);
+},
+);
+},
+),
+
+  floatingActionButton: FloatingActionButton(
+    backgroundColor: AppColors.primary,
+    foregroundColor: Colors.white,
+    child: const Icon(Icons.add),
+    onPressed: () {
+      _addTask(context);
+    },
+  ),
+);
+}
 }

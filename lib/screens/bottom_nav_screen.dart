@@ -15,11 +15,11 @@ class BottomNavScreen extends StatefulWidget {
 
 class _BottomNavScreenState extends State<BottomNavScreen> {
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 0; //home page
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const ScheduleScreen(),
+     ScheduleScreen(),
     SubjectsScreen(),
     const StatisticsScreen(),
     const ProfileScreen(),

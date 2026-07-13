@@ -1,177 +1,333 @@
 import 'package:flutter/material.dart';
 
-class StatisticsScreen extends StatelessWidget {
+import '../services/statistics_service.dart';
+import '../utils/app_colors.dart';
+import '../utils/app_styles.dart';
+import '../widgets/progress_pie_chart.dart';
+
+class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEAF7F3),
-      appBar: AppBar(
-        title: const Text("Statistics"),
-        centerTitle: true,
-        backgroundColor: Colors.teal,
-        foregroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Study Statistics",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+  State<StatisticsScreen> createState() =>
+      _StatisticsScreenState();
+}
 
-              const SizedBox(height: 8),
+class _StatisticsScreenState
+    extends State<StatisticsScreen> {
 
-              const Text(
-                "Track your learning progress over time.",
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
-              ),
+final StatisticsService statisticsService =
+StatisticsService();
 
-              const SizedBox(height: 30),
+int subjects = 0;
+int tasks = 0;
+int completed = 0;
+int pending = 0;
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(25),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.bar_chart_rounded,
-                      size: 70,
-                      color: Colors.teal.shade700,
-                    ),
+bool loading = true;
 
-                    const SizedBox(height: 15),
+@override
+void initState() {
+  super.initState();
+  loadStatistics();
+}
 
-                    const Text(
-                      "No Statistics Available",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+Future<void> loadStatistics() async {
 
-                    const SizedBox(height: 10),
+   subjects =
+   await statisticsService.subjectCount();
 
-                    const Text(
-                      "Complete study sessions to view your progress here.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  tasks = await statisticsService.taskCount();
 
-              const SizedBox(height: 30),
+completed = await statisticsService.completedCount();
 
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      Icons.timer,
-                      "Study Hours",
-                      "0 hrs",
-                    ),
-                  ),
+pending = await statisticsService.pendingCount();
 
-                  const SizedBox(width: 15),
+setState(() {
+ loading = false;
+   }
+ );
+}
 
-                  Expanded(
-                    child: _buildStatCard(
-                      Icons.task_alt,
-                      "Completed",
-                      "0",
-                    ),
-                  ),
-                ],
-              ),
+double get progress {
 
-              const SizedBox(height: 15),
+if (tasks == 0) {
+return 0;
+}
 
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      Icons.local_fire_department,
-                      "Streak",
-                      "0",
-                    ),
-                  ),
+return completed / tasks;
+}
 
-                  const SizedBox(width: 15),
+@override
+Widget build(BuildContext context) {
 
-                  Expanded(
-                    child: _buildStatCard(
-                      Icons.emoji_events,
-                      "Achievements",
-                      "0",
-                    ),
-                  ),
-                ],
-              ),
+  return Scaffold(
 
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+ backgroundColor: AppColors.background,
 
-  Widget _buildStatCard(
-      IconData icon,
-      String title,
-      String value,
-      ) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
+ appBar: AppBar(
+ title: const Text("Statistics"),
+ ),
+
+ body: loading
+ ? const Center(
+ child:
+ CircularProgressIndicator(),
+ )
+: RefreshIndicator(
+
+    onRefresh: loadStatistics,
+
+child: ListView(
+
+padding:
+const EdgeInsets.all(20),
+
+children: [
+
+Text(
+"Study Progress", style: AppStyles.heading,
+),
+
+const SizedBox(
+height: 8,
+),
+
+Text(
+"Track your learning journey",
+style:
+AppStyles.subtitle,
+),
+
+const SizedBox(
+height: 25,
+),
+
+Card(
+child: Padding(
+padding:
+const EdgeInsets.all(
+20),
+child: Column(
+crossAxisAlignment:
+CrossAxisAlignment
+.start,
+children: [
+
+Text(
+"Overall Progress",
+style:
+AppStyles.title,
+),
+
+const SizedBox(
+height: 20,
+),
+
+LinearProgressIndicator(
+value: progress,
+minHeight: 12,
+borderRadius:
+BorderRadius
+.circular(
+20),
+backgroundColor:
+Colors.grey
+.shade300,
+color:
+AppColors.primary,
+),
+
+const SizedBox(
+height: 15,
+),
+
+Center(
+child: Text(
+"${(progress * 100).toStringAsFixed(0)}% Completed",
+style: const TextStyle(
+fontSize: 18,
+fontWeight:
+FontWeight
+.bold,
+),
+),
+),
+],
+),
+),
+),
+
+const SizedBox(
+height: 25,
+),
+
+ProgressPieChart(
+completed:
+completed,
+pending:
+pending,
+),
+
+const SizedBox(
+height: 25,
+),
+  Card(
+    child: Padding(
+      padding: const EdgeInsets.all(20),
       child: Column(
+        crossAxisAlignment:
+        CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 34,
-            color: Colors.teal,
-          ),
-
-          const SizedBox(height: 12),
 
           Text(
-            value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+            "Study Overview",
+            style: AppStyles.title,
+          ),
+
+          const SizedBox(height: 20),
+
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor:
+              Colors.indigo.shade100,
+              child: const Icon(
+                Icons.menu_book,
+                color: Colors.indigo,
+              ),
+            ),
+            title: const Text("Subjects"),
+            trailing: Text(
+              subjects.toString(),
+              style: const TextStyle(
+                fontWeight:
+                FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
           ),
 
-          const SizedBox(height: 5),
+          const Divider(),
 
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black54,
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor:
+              Colors.orange.shade100,
+              child: const Icon(
+                Icons.assignment,
+                color: Colors.orange,
+              ),
+            ),
+            title: const Text("Total Tasks"),
+            trailing: Text(
+              tasks.toString(),
+              style: const TextStyle(
+                fontWeight:
+                FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+
+          const Divider(),
+
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor:
+              Colors.green.shade100,
+              child: const Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+            ),
+            title: const Text("Completed"),
+            trailing: Text(
+              completed.toString(),
+              style: const TextStyle(
+                fontWeight:
+                FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ),
+
+          const Divider(),
+
+          ListTile(
+            leading: CircleAvatar(
+              backgroundColor:
+              Colors.red.shade100,
+              child: const Icon(
+                Icons.pending_actions,
+                color: Colors.red,
+              ),
+            ),
+            title: const Text("Pending"),
+            trailing: Text(
+              pending.toString(),
+              style: const TextStyle(
+                fontWeight:
+                FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  ),
+
+  const SizedBox(height: 25),
+
+  Card(
+    child: Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+
+          const Icon(
+            Icons.emoji_events,
+            color: Colors.amber,
+            size: 55,
+          ),
+
+          const SizedBox(height: 15),
+
+          Text(
+            "Completion Rate",
+            style: AppStyles.title,
+          ),
+
+          const SizedBox(height: 10),
+
+          Text(
+            "${(progress * 100).toStringAsFixed(0)}%",
+            style: TextStyle(
+              fontSize: 42,
+              fontWeight:
+              FontWeight.bold,
+              color: AppColors.primary,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          Text(
+            completed == tasks
+                ? "Fantastic! You're on track."
+                : "Keep studying to reach your weekly goal!",
+            textAlign: TextAlign.center,
+            style: AppStyles.subtitle,
+          ),
+        ],
+      ),
+    ),
+  ),
+
+  const SizedBox(height: 30),
+],
+),
+),
+);
+}
 }

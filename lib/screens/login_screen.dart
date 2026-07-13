@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'signup_screen.dart';
+import '../utils/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _isLoading = false;
+  bool _isLoading = false; //initially no login so no loading
   String? _errorMessage;
 
   Future<void> _handleLogin() async {
@@ -55,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _emailController.dispose();    //Controllers use memory.When screen closes they should be destroyed.
     _passwordController.dispose();
     super.dispose();
   }
@@ -63,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF7F3),
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -79,31 +80,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
 
-                    const Icon(
+                    Icon(
                       Icons.menu_book_rounded,
                       size: 70,
-                      color: Colors.teal,
+                      color: AppColors.nightBordeaux,
                     ),
 
                     const SizedBox(height: 15),
 
-                    const Text(
+                    Text(
                       "Study Planner",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.teal,
+                        color: AppColors.nightBordeaux,
                       ),
                     ),
 
                     const SizedBox(height: 8),
 
-                    const Text(
+                    Text(
                       "Welcome Back!",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: AppColors.textSecondary,
                         fontSize: 16,
                       ),
                     ),
@@ -115,10 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         prefixIcon:
-                        const Icon(Icons.email, color: Colors.teal),
+                        Icon(Icons.email, color: AppColors.primary),
                         labelText: "Email",
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: AppColors.card,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -132,10 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: true,
                       decoration: InputDecoration(
                         prefixIcon:
-                        const Icon(Icons.lock, color: Colors.teal),
+                        Icon(Icons.lock, color: AppColors.primary),
                         labelText: "Password",
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: AppColors.card,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -148,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.red.shade50,
+                          color: AppColors.mauveShadow.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
@@ -166,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _isLoading
                         ? const Center(
                       child: CircularProgressIndicator(
-                        color: Colors.teal,
+                        color: AppColors.nightBordeaux,
                       ),
                     )
                         : SizedBox(
@@ -174,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         onPressed: _handleLogin,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
+                          backgroundColor: AppColors.nightBordeaux,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -205,10 +206,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: const Text(
+                          child: Text(
                             "Sign Up",
                             style: TextStyle(
-                              color: Colors.teal,
+                              color: AppColors.nightBordeaux,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
