@@ -19,6 +19,7 @@ class DashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Card(
       elevation: 2,
       child: Padding(
@@ -30,10 +31,10 @@ class DashboardCard extends StatelessWidget {
 
             CircleAvatar(
               radius: 22,
-              backgroundColor: color.withValues(alpha: 0.15),
+              backgroundColor: color.withValues(alpha: isDark ? 0.28 : 0.15),
               child: Icon(
                 icon,
-                color: color,
+                color: isDark ? AppColors.linen : color,
                 size: 22,
               ),
             ),

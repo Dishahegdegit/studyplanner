@@ -27,7 +27,7 @@ class TimerControls extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.nightBordeaux,
+              backgroundColor: AppColors.lobsterPink,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
@@ -48,7 +48,7 @@ class TimerControls extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.mauveShadow,
+              backgroundColor: AppColors.winePlum,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
@@ -63,8 +63,8 @@ class TimerControls extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.rosyGranite,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.almondSilk,
+              foregroundColor: AppColors.midnightViolet,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
             onPressed: onReset,

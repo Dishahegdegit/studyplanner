@@ -32,15 +32,15 @@ class TimerCircle extends StatelessWidget {
           SizedBox(
             width: 260,
             height: 260,
-            child: CircularProgressIndicator(
-              value: progress,
-              strokeWidth: 12,
-              backgroundColor: AppColors.rosyGranite.withValues(alpha: 0.3),
-              valueColor: AlwaysStoppedAnimation(
-                AppColors.nightBordeaux,
+              child: CircularProgressIndicator(
+                value: progress,
+                strokeWidth: 12,
+                backgroundColor: AppColors.cardSecondary.withValues(alpha: 0.4),
+                valueColor: AlwaysStoppedAnimation(
+                AppColors.lobsterPink,
+                ),
               ),
             ),
-          ),
 
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -48,7 +48,7 @@ class TimerCircle extends StatelessWidget {
 
               Icon(
                 Icons.local_fire_department,
-                color: AppColors.nightBordeaux,
+                color: AppColors.lobsterPink,
                 size: 50,
               ),
 

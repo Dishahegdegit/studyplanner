@@ -28,40 +28,43 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.nightBordeaux,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.school,
-              size: 80,
-              color: AppColors.alabasterGrey,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Study Planner',
-              style: TextStyle(
-                color: AppColors.alabasterGrey,
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
+    return Container(
+      decoration: AppColors.getBackgroundDecoration(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.school,
+                size: 80,
+                color: AppColors.textPrimary,
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Plan. Study. Succeed.',
-              style: TextStyle(
-                color: AppColors.rosyGranite,
-                fontSize: 15,
-                letterSpacing: 1.2,
+              const SizedBox(height: 16),
+              Text(
+                'Study Planner',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 40),
-            CircularProgressIndicator(
-              color: AppColors.alabasterGrey,
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                'Plan. Study. Succeed.',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 15,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: 40),
+              CircularProgressIndicator(
+                color: AppColors.primary,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
 import '../screens/login_screen.dart';
 import '../screens/bottom_nav_screen.dart';
+import '../utils/app_colors.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -20,7 +21,7 @@ class AuthGate extends StatelessWidget {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(
-                color: Colors.teal,
+                color: AppColors.lobsterPink,
               ),
             ),
           );

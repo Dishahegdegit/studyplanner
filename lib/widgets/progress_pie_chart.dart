@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
 
 class ProgressPieChart extends StatelessWidget {
   final int completed;
@@ -25,22 +26,22 @@ class ProgressPieChart extends StatelessWidget {
 
             PieChartSectionData(
               value: completed.toDouble(),
-              color: Colors.green,
+              color: AppColors.lobsterPink,
               radius: 70,
               title: completed.toString(),
               titleStyle: const TextStyle(
-                color: Colors.white,
+                color: AppColors.linen,
                 fontWeight: FontWeight.bold,
               ),
             ),
 
             PieChartSectionData(
               value: pending.toDouble(),
-              color: Colors.red,
+              color: AppColors.winePlum,
               radius: 70,
               title: pending.toString(),
               titleStyle: const TextStyle(
-                color: Colors.white,
+                color: AppColors.linen,
                 fontWeight: FontWeight.bold,
               ),
             ),

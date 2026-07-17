@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/task_model.dart';
 import '../models/subject_model.dart';
 import '../services/subject_service.dart';
+import '../services/notification_service.dart';
 import '../utils/app_colors.dart';
 
 class AddTaskDialog extends StatefulWidget {
@@ -129,6 +130,7 @@ endTime = time;
 
 @override
 Widget build(BuildContext context) {
+final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
 return StreamBuilder<List<SubjectModel>>(
 
@@ -193,7 +195,7 @@ OutlineInputBorder(),
 const SizedBox(height: 18),
 
 DropdownButtonFormField<String>(
-value: selectedSubjectId,
+  initialValue: selectedSubjectId,
 
 decoration:
 const InputDecoration(
@@ -235,13 +237,19 @@ const SizedBox(height: 18),
       borderRadius: BorderRadius.circular(12),
     ),
     tileColor: AppColors.card,
-    leading: const Icon(Icons.calendar_month),
+    leading: Icon(
+      Icons.calendar_month,
+      color: isDark ? AppColors.linen : AppColors.lobsterPink,
+    ),
     title: Text(
       selectedDate == null
           ? "Select Date"
           : formatDate(selectedDate!),
     ),
-    trailing: const Icon(Icons.arrow_drop_down),
+    trailing: Icon(
+      Icons.arrow_drop_down,
+      color: isDark ? AppColors.linen : AppColors.textSecondary,
+    ),
     onTap: pickDate,
   ),
 
@@ -252,13 +260,19 @@ const SizedBox(height: 18),
       borderRadius: BorderRadius.circular(12),
     ),
     tileColor: AppColors.card,
-    leading: const Icon(Icons.access_time),
+    leading: Icon(
+      Icons.access_time,
+      color: isDark ? AppColors.linen : AppColors.lobsterPink,
+    ),
     title: Text(
       startTime == null
           ? "Start Time"
           : formatTime(startTime!),
     ),
-    trailing: const Icon(Icons.arrow_drop_down),
+    trailing: Icon(
+      Icons.arrow_drop_down,
+      color: isDark ? AppColors.linen : AppColors.textSecondary,
+    ),
     onTap: pickStartTime,
   ),
 
@@ -269,20 +283,26 @@ const SizedBox(height: 18),
       borderRadius: BorderRadius.circular(12),
     ),
     tileColor: AppColors.card,
-    leading: const Icon(Icons.schedule),
+    leading: Icon(
+      Icons.schedule,
+      color: isDark ? AppColors.linen : AppColors.winePlum,
+    ),
     title: Text(
       endTime == null
           ? "End Time"
           : formatTime(endTime!),
     ),
-    trailing: const Icon(Icons.arrow_drop_down),
+    trailing: Icon(
+      Icons.arrow_drop_down,
+      color: isDark ? AppColors.linen : AppColors.textSecondary,
+    ),
     onTap: pickEndTime,
   ),
 
   const SizedBox(height: 18),
 
-  DropdownButtonFormField<String>(
-    value: priority,
+DropdownButtonFormField<String>(
+    initialValue: priority,
     decoration: const InputDecoration(
       labelText: "Priority",
       border: OutlineInputBorder(),
@@ -315,17 +335,15 @@ const SizedBox(height: 18),
     height: 48,
     child: ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.lobsterPink,
         foregroundColor: Colors.white,
       ),
-      onPressed: () {
-
+      onPressed: () async {
         if (titleController.text.trim().isEmpty ||
             selectedSubjectId == null ||
             selectedDate == null ||
             startTime == null ||
             endTime == null) {
-
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -333,40 +351,33 @@ const SizedBox(height: 18),
               ),
             ),
           );
-
           return;
         }
 
-        final SubjectModel selectedSubject =
-        subjects.firstWhere(
-              (subject) =>
-          subject.id ==
-              selectedSubjectId,
+        final SubjectModel selectedSubject = subjects.firstWhere(
+          (subject) => subject.id == selectedSubjectId,
         );
+
+        await _scheduleReminder(
+          title: titleController.text.trim(),
+          subjectName: selectedSubject.name,
+          date: selectedDate!,
+          start: startTime!,
+          taskId: widget.task?.id,
+        );
+
+        if (!context.mounted) return;
 
         Navigator.pop(
           context,
           {
-            "title":
-            titleController.text.trim(),
-
-            "subjectId":
-            selectedSubject.id,
-
-            "subjectName":
-            selectedSubject.name,
-
-            "date":
-            formatDate(selectedDate!),
-
-            "startTime":
-            formatTime(startTime!),
-
-            "endTime":
-            formatTime(endTime!),
-
-            "priority":
-            priority,
+            "title": titleController.text.trim(),
+            "subjectId": selectedSubject.id,
+            "subjectName": selectedSubject.name,
+            "date": formatDate(selectedDate!),
+            "startTime": formatTime(startTime!),
+            "endTime": formatTime(endTime!),
+            "priority": priority,
           },
         );
       },
@@ -385,6 +396,56 @@ const SizedBox(height: 18),
 },
 );
 }
+
+  /// Schedules a local notification 15 minutes before the task starts.
+  /// Silently skips if the reminder time is already in the past.
+  Future<void> _scheduleReminder({
+    required String title,
+    required String subjectName,
+    required DateTime date,
+    required TimeOfDay start,
+    String? taskId,
+  }) async {
+    try {
+      // Build the full start DateTime from picked date + time
+      final startDateTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        start.hour,
+        start.minute,
+      );
+
+      // Reminder fires 15 minutes before start
+      final reminderTime = startDateTime.subtract(const Duration(minutes: 15));
+
+      // Don't schedule if the time has already passed
+      if (reminderTime.isBefore(DateTime.now())) return;
+
+      // Use a stable int ID: mix date + hour + minute so edits
+      // to the same task replace the old notification.
+      final notifId = Object.hash(
+        date.day,
+        date.month,
+        date.year,
+        start.hour,
+        start.minute,
+        title,
+      ).abs() % 100000; // keep within int32 safe range
+
+      // Cancel any previous notification for this slot (edit case)
+      NotificationService.cancelNotification(notifId);
+
+      await NotificationService.scheduleNotification(
+        id: notifId,
+        title: '⏰ Upcoming Study Session',
+        body: '$title · $subjectName starts in 15 minutes!',
+        scheduledTime: reminderTime,
+      );
+    } catch (_) {
+      // Fail silently — notification is non-critical
+    }
+  }
 
 @override
 void dispose() {

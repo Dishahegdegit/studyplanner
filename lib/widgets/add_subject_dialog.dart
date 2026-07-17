@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/subject_model.dart';
+import '../utils/app_colors.dart';
 
 class AddSubjectDialog extends StatefulWidget {
   final SubjectModel? subject;
@@ -19,14 +20,7 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
 
   late int selectedColor;
 
-  final List<Color> colors = [
-    Colors.blue,
-    Colors.green,
-    Colors.red,
-    Colors.orange,
-    Colors.purple,
-    Colors.teal,
-  ];
+  final List<Color> colors = AppColors.subjectPalette;
 
   @override
   void initState() {
@@ -40,7 +34,7 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
       text: widget.subject?.weeklyGoal.toString() ?? '',
     );
 
-    selectedColor = widget.subject?.color ?? Colors.blue.value;
+    selectedColor = widget.subject?.color ?? colors.first.value;
   }
 
   @override
@@ -53,6 +47,7 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Theme.of(context).dialogTheme.backgroundColor,
       title: Text(
         widget.subject == null ? "Add Subject" : "Edit Subject",
       ),
@@ -61,24 +56,22 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: "Subject Name",
-                border: OutlineInputBorder(),
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  labelText: "Subject Name",
+                ),
               ),
-            ),
 
             const SizedBox(height: 15),
 
-            TextField(
-              controller: goalController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Weekly Goal (Hours)",
-                border: OutlineInputBorder(),
+              TextField(
+                controller: goalController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: "Weekly Goal (Hours)",
+                ),
               ),
-            ),
 
             const SizedBox(height: 20),
 
@@ -106,11 +99,17 @@ class _AddSubjectDialogState extends State<AddSubjectDialog> {
                   child: CircleAvatar(
                     radius: selectedColor == color.value ? 20 : 17,
                     backgroundColor: color,
+                    foregroundColor: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.linen
+                        : AppColors.midnightViolet,
                     child: selectedColor == color.value
-                        ? const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    )
+                        ? Icon(
+                            Icons.check,
+                            color: Theme.of(context).brightness ==
+                                    Brightness.dark
+                                ? AppColors.linen
+                                : AppColors.midnightViolet,
+                          )
                         : null,
                   ),
                 );

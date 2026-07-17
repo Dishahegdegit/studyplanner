@@ -40,8 +40,8 @@ class AppStyles {
 
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(
-          color: Colors.grey,
+        borderSide: BorderSide(
+          color: AppColors.textMuted.withValues(alpha: 0.35),
         ),
       ),
 

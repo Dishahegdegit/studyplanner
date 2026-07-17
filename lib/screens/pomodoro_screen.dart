@@ -266,233 +266,143 @@ void dispose() {
 }
 
 @override
-Widget build(BuildContext context) {
-
-  return Scaffold(
-
-    backgroundColor: AppColors.background,
-
-    appBar: AppBar(
-
-      backgroundColor: AppColors.primary,
-
-      foregroundColor: Colors.white,
-
-      centerTitle: true,
-
-      title: const Text(
-        "Pomodoro Timer",
+Widget build(BuildContext context) {  return Container(
+    decoration: AppColors.getBackgroundDecoration(),
+    child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "Pomodoro Timer",
+        ),
       ),
-    ),
-
-    body: SingleChildScrollView(
-
-      padding: const EdgeInsets.all(20),
-
-      child: Column(
-
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-
-        children: [
-
-          const Text(
-            "Choose Focus Time",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          Wrap(
-
-            spacing: 10,
-
-            runSpacing: 10,
-
-            children: presets.map((minutes) {
-
-              bool selected =
-                  selectedMinutes == minutes;
-
-              return ChoiceChip(
-
-                label: Text("$minutes min"),
-
-                selected: selected,
-
-                selectedColor: AppColors.nightBordeaux,
-
-                onSelected: (_) {
-
-                  selectMinutes(minutes);
-
-                },
-              );
-
-            }).toList(),
-          ),
-
-          const SizedBox(height: 25),
-
-          TextField(
-
-            controller: customController,
-
-            keyboardType: TextInputType.number,
-
-            decoration: InputDecoration(
-
-              labelText: "Custom Minutes",
-
-              hintText: "Example: 30",
-
-              border: OutlineInputBorder(
-                borderRadius:
-                BorderRadius.circular(12),
-              ),
-
-              suffixIcon: IconButton(
-
-                icon: const Icon(Icons.check),
-
-                onPressed: applyCustomMinutes,
-
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              "Choose Focus Time",
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-
-          const SizedBox(height: 35),
-
-          Center(
-
-            child: TimerCircle(
-
-              secondsLeft: secondsLeft,
-
-              totalSeconds: totalSeconds,
-
+            const SizedBox(height: 20),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: presets.map((minutes) {
+                bool selected = selectedMinutes == minutes;
+                return ChoiceChip(
+                  label: Text("$minutes min"),
+                  selected: selected,
+                  selectedColor: AppColors.primary,
+                  onSelected: (_) {
+                    selectMinutes(minutes);
+                  },
+                );
+              }).toList(),
             ),
-          ),
-
-          const SizedBox(height: 35),
-
-          TimerControls(
-
-            isRunning: isRunning,
-
-            isPaused: isPaused,
-
-            onStart: startTimer,
-
-            onPause: pauseTimer,
-
-            onResume: resumeTimer,
-
-            onReset: resetTimer,
-
-          ),
-
-          const SizedBox(height: 40),
-
-          Card(
-
-            elevation: 3,
-
-            shape: RoundedRectangleBorder(
-
-              borderRadius:
-              BorderRadius.circular(15),
-
+            const SizedBox(height: 25),
+            TextField(
+              controller: customController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Custom Minutes",
+                hintText: "Example: 30",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: applyCustomMinutes,
+                ),
+              ),
             ),
-
-            child: Padding(
-
-              padding: const EdgeInsets.all(18),
-
-              child: Column(
-
-                children: [
-
-                  const Text(
-
-                    "Today's Progress",
-
-                    style: TextStyle(
-
-                      fontSize: 20,
-
-                      fontWeight: FontWeight.bold,
-
+            const SizedBox(height: 35),
+            Center(
+              child: TimerCircle(
+                secondsLeft: secondsLeft,
+                totalSeconds: totalSeconds,
+              ),
+            ),
+            const SizedBox(height: 35),
+            TimerControls(
+              isRunning: isRunning,
+              isPaused: isPaused,
+              onStart: startTimer,
+              onPause: pauseTimer,
+              onResume: resumeTimer,
+              onReset: resetTimer,
+            ),
+            const SizedBox(height: 40),
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  children: [
+                    const Text(
+                      "Today's Progress",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  Row(
-
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceAround,
-
-                    children: [
-
-                      Column(
-
-                        children: [
-
-                          const Icon(
-                            Icons.local_fire_department,
-                            color: AppColors.nightBordeaux,
-                            size: 35,
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          Text(
-                            "$completedToday",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.local_fire_department,
+                              color: AppColors.primary,
+                              size: 35,
                             ),
-                          ),
-
-                          const Text("Sessions"),
-
-                        ],
-                      ),
-
-                      Column(
-
-                        children: [
-
-                          const Icon(
-                            Icons.timer,
-                            color: AppColors.rosyGranite,
-                            size: 35,
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          Text(
-                            "$minutesToday",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(height: 8),
+                            Text(
+                              "$completedToday",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-
-                          const Text("Minutes"),
-
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                            const Text("Sessions"),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Icon(
+                              Icons.timer,
+                              color: AppColors.textSecondary,
+                              size: 35,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "$minutesToday",
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Text("Minutes"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
