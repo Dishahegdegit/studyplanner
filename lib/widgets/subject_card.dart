@@ -91,7 +91,9 @@ class SubjectCard extends StatelessWidget {
                       backgroundColor: Color(subject.color),
                       child: Icon(
                         Icons.menu_book,
-                        color: isDark ? AppColors.linen : AppColors.midnightViolet,
+                        color: isDark
+                            ? AppColors.linen
+                            : AppColors.midnightViolet,
                       ),
                     ),
                     const SizedBox(width: 15),
@@ -160,9 +162,12 @@ class SubjectCard extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 8,
-                    backgroundColor: AppColors.cardSecondary.withValues(alpha: 0.24),
+                    backgroundColor:
+                        AppColors.cardSecondary.withValues(alpha: 0.4),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      isGoalAchieved ? AppColors.lobsterPink : Color(subject.color),
+                      isGoalAchieved
+                          ? AppColors.lobsterPink
+                          : Color(subject.color),
                     ),
                   ),
                 ),
@@ -176,7 +181,9 @@ class SubjectCard extends StatelessWidget {
                       onPressed: onNotes,
                       icon: Icon(
                         Icons.note_alt,
-                        color: isDark ? AppColors.linen : AppColors.midnightViolet,
+                        color: isDark
+                            ? AppColors.linen
+                            : AppColors.midnightViolet,
                       ),
                       label: const Text("Notes"),
                     ),
@@ -185,14 +192,18 @@ class SubjectCard extends StatelessWidget {
                       onPressed: onEdit,
                       icon: Icon(
                         Icons.edit,
-                        color: isDark ? AppColors.linen : AppColors.lobsterPink,
+                        color: isDark
+                            ? AppColors.linen
+                            : AppColors.lobsterPink,
                       ),
                     ),
                     IconButton(
                       onPressed: onDelete,
                       icon: Icon(
                         Icons.delete,
-                        color: isDark ? AppColors.almondSilk : AppColors.winePlum,
+                        color: isDark
+                            ? AppColors.almondSilk
+                            : AppColors.winePlum,
                       ),
                     ),
                   ],
