@@ -25,9 +25,9 @@ class TaskCard extends StatelessWidget {
       case "High":
         return AppColors.lobsterPink;
       case "Medium":
-        return AppColors.almondSilk;
+        return const Color(0xFFD84315);
       case "Low":
-        return AppColors.winePlum;
+        return const Color(0xFF4CAF50); // Green — clearly visible on both themes
       default:
         return AppColors.textSecondary;
     }

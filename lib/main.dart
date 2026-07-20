@@ -7,10 +7,12 @@ import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(       //connecting app to firebase
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await NotificationService.initialize();
+  await Future.wait([
+    Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ),
+    NotificationService.initialize(),
+  ]);
   runApp(const StudyPlannerApp());
 }
 

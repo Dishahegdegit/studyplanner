@@ -27,18 +27,19 @@ class AppTheme {
       onSurface: AppColors.midnightViolet,
     ),
 
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
+    appBarTheme: AppBarTheme(
+      // 60-30-10: Very subtle linen (30% surface) tint over the 60% gradient bg
+      backgroundColor: AppColors.linen.withValues(alpha: 0.15),
       foregroundColor: AppColors.midnightViolet,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: AppColors.midnightViolet,
         letterSpacing: 0.5,
       ),
-      iconTheme: IconThemeData(color: AppColors.midnightViolet),
+      iconTheme: const IconThemeData(color: AppColors.midnightViolet),
     ),
 
     inputDecorationTheme: InputDecorationTheme(
@@ -68,11 +69,12 @@ class AppTheme {
     ),
 
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.almondSilk.withValues(alpha: 0.35),
+      // 60-30-10: almondSilk is 30% surface, more visible at 0.65
+      backgroundColor: AppColors.almondSilk.withValues(alpha: 0.65),
       selectedColor: AppColors.lobsterPink,
       labelStyle: const TextStyle(color: AppColors.midnightViolet),
       secondaryLabelStyle: const TextStyle(color: Colors.white),
-      side: BorderSide(color: AppColors.winePlum.withValues(alpha: 0.15)),
+      side: BorderSide(color: AppColors.winePlum.withValues(alpha: 0.2)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
     ),
 
@@ -148,23 +150,25 @@ class AppTheme {
       onSurface: AppColors.linen,
     ),
 
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
+    appBarTheme: AppBarTheme(
+      // 60-30-10: Subtle winePlum (30% surface) tint over the 60% dark gradient bg
+      backgroundColor: AppColors.winePlum.withValues(alpha: 0.25),
       foregroundColor: AppColors.linen,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: TextStyle(
+      titleTextStyle: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: AppColors.linen,
         letterSpacing: 0.5,
       ),
-      iconTheme: IconThemeData(color: AppColors.linen),
+      iconTheme: const IconThemeData(color: AppColors.linen),
     ),
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.winePlum.withValues(alpha: 0.35),
+      // 60-30-10: winePlum is the 30% surface color, raised opacity for clear surface presence
+      fillColor: AppColors.winePlum.withValues(alpha: 0.55),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -189,11 +193,12 @@ class AppTheme {
     ),
 
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.midnightViolet.withValues(alpha: 0.45),
+      // 60-30-10: winePlum (30% surface) instead of midnightViolet (60% background)
+      backgroundColor: AppColors.winePlum.withValues(alpha: 0.55),
       selectedColor: AppColors.lobsterPink,
       labelStyle: const TextStyle(color: AppColors.linen),
-      secondaryLabelStyle: const TextStyle(color: AppColors.midnightViolet),
-      side: BorderSide(color: AppColors.almondSilk.withValues(alpha: 0.15)),
+      secondaryLabelStyle: const TextStyle(color: AppColors.linen),
+      side: BorderSide(color: AppColors.almondSilk.withValues(alpha: 0.2)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
     ),
 

@@ -35,7 +35,7 @@ class StatisticsScreen extends StatelessWidget {
     final Color primaryAccent =
         isDark ? AppColors.linen : AppColors.vividPink;
     final Color warmAccent =
-        isDark ? const Color(0xFFFFD7A8) : AppColors.almondSilk;
+        isDark ? const Color(0xFFFFD7A8) : AppColors.winePlum;
 
     return Container(
       decoration: AppColors.getBackgroundDecoration(),
@@ -65,7 +65,7 @@ class StatisticsScreen extends StatelessWidget {
                   final tasks = taskSnap.data ?? [];
                   final sessions = pomodoroSnap.data ?? [];
 
-                  // ── Core counts ──────────────────────────────────────────
+                  // ── Core counts ──
                   final int totalTasks = tasks.length;
                   final int completedTasks =
                       tasks.where((t) => t.completed).length;
@@ -73,7 +73,7 @@ class StatisticsScreen extends StatelessWidget {
                   final double overallProgress =
                       totalTasks == 0 ? 0 : completedTasks / totalTasks;
 
-                  // ── Study hours per subject (completed tasks only) ────────
+                  // ── Study hours per subject (completed tasks only) ──
                   final Map<String, double> subjectHours = {};
                   for (final task in tasks) {
                     if (task.completed) {
@@ -83,7 +83,7 @@ class StatisticsScreen extends StatelessWidget {
                     }
                   }
 
-                  // ── Most studied subject ─────────────────────────────────
+                  // ── Most studied subject ──
                   String mostStudied = '—';
                   if (subjectHours.isNotEmpty) {
                     mostStudied = subjectHours.entries
@@ -91,7 +91,7 @@ class StatisticsScreen extends StatelessWidget {
                         .key;
                   }
 
-                  // ── Average study hours per day ──────────────────────────
+                  // ── Average study hours per day ─
                   final Map<String, double> perDay = {};
                   for (final task in tasks) {
                     if (task.completed) {
@@ -103,7 +103,7 @@ class StatisticsScreen extends StatelessWidget {
                       ? 0
                       : perDay.values.reduce((a, b) => a + b) / perDay.length;
 
-                  // ── Pomodoro sessions ────────────────────────────────────
+                  // ── Pomodoro sessions ──
                   final int pomodoroSessions = sessions.length;
                   final int pomodoroMinutes = sessions.fold(
                       0, (sum, s) => sum + s.minutes);
@@ -111,14 +111,14 @@ class StatisticsScreen extends StatelessWidget {
                   return ListView(
                     padding: const EdgeInsets.all(20),
                     children: [
-                      // ── Header ─────────────────────────────────────────
+                      //  Header
                       Text('Study Progress', style: AppStyles.heading),
                       const SizedBox(height: 4),
                       Text('Track your learning journey',
                           style: AppStyles.subtitle),
                       const SizedBox(height: 24),
 
-                      // ── Overall progress card ──────────────────────────
+                      // ── Overall progress card
                       _SectionCard(
                         title: 'Overall Progress',
                         icon: Icons.bar_chart_rounded,
@@ -146,14 +146,14 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ── Pie chart ─────────────────────────────────────
+                      // ── Pie chart
                       ProgressPieChart(
                         completed: completedTasks,
                         pending: pendingTasks,
                       ),
                       const SizedBox(height: 20),
 
-                      // ── Quick stats row ────────────────────────────────
+                      // ── Quick stats row
                       _QuickStatsRow(
                         items: [
                           _QuickStat(
@@ -178,7 +178,7 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ── Pomodoro stats ─────────────────────────────────
+                      // ── Pomodoro stats
                       _SectionCard(
                         title: 'Pomodoro Sessions',
                         icon: Icons.timer,
@@ -207,7 +207,7 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ── Study averages ─────────────────────────────────
+                      // ── Study averages
                       _SectionCard(
                         title: 'Study Insights',
                         icon: Icons.insights,
@@ -241,7 +241,7 @@ class StatisticsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // ── Subject-wise hours & goal progress ─────────────
+                      // ── Subject-wise hours & goal progress ───
                       _SectionCard(
                         title: 'Subject Goal Progress',
                         icon: Icons.school,
@@ -322,7 +322,7 @@ class StatisticsScreen extends StatelessWidget {
                               ),
                       ),
 
-                      // ── Weekly Bar Chart ───────────────────────────────
+                      // ── Weekly Bar Chart ─
                       const SizedBox(height: 20),
                       _SectionCard(
                         title: 'Weekly Study Hours',
@@ -348,7 +348,7 @@ class StatisticsScreen extends StatelessWidget {
   }
 }
 
-// ── Helper Widgets ────────────────────────────────────────────────────────────
+// ── Helper Widgets ─
 
 class _SectionCard extends StatelessWidget {
   final String title;
@@ -380,7 +380,7 @@ class _SectionCard extends StatelessWidget {
                   backgroundColor: iconColor.withValues(alpha: isDark ? 0.28 : 0.16),
                   child: Icon(
                     icon,
-                    color: isDark ? AppColors.linen : iconColor,
+                    color: iconColor,
                     size: 17,
                   ),
                 ),
@@ -473,9 +473,9 @@ class _StatTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.14),
+        color: color.withValues(alpha: isDark ? 0.18 : 0.22),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
+        border: Border.all(color: color.withValues(alpha: isDark ? 0.40 : 0.6)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -527,7 +527,7 @@ class _InsightRow extends StatelessWidget {
             backgroundColor: iconColor.withValues(alpha: isDark ? 0.24 : 0.14),
             child: Icon(
               icon,
-              color: isDark ? AppColors.linen : iconColor,
+              color: iconColor,
               size: 18,
             ),
           ),
@@ -536,6 +536,7 @@ class _InsightRow extends StatelessWidget {
             child: Text(label,
                 style: TextStyle(fontSize: 14, color: AppColors.textMuted)),
           ),
+          const SizedBox(width: 8),
           Flexible(
             child: Text(
               value,
@@ -550,8 +551,7 @@ class _InsightRow extends StatelessWidget {
   }
 }
 
-// ── Weekly Bar Chart ──────────────────────────────────────────────────────────
-
+// ── Weekly Bar Chart ─
 class _WeeklyBarChart extends StatelessWidget {
   final Map<String, double> hoursPerDay;
   final Color barColor;
@@ -617,7 +617,7 @@ class _BarChartPainter extends CustomPainter {
     final double maxVal = values.fold(0.0, (m, v) => v > m ? v : m);
     final double effectiveMax = maxVal < 1.0 ? 4.0 : maxVal * 1.15;
 
-    // ── Baseline ────────────────────────────────────────────────────────
+    // ── Baseline ─
     final baselinePaint = Paint()
       ..color = AppColors.cardSecondary
       ..strokeWidth = 1.2;
@@ -627,7 +627,7 @@ class _BarChartPainter extends CustomPainter {
       baselinePaint,
     );
 
-    // ── Y-axis labels ────────────────────────────────────────────────────
+    // ── Y-axis labels ──
     final labelStyle = TextStyle(
       fontSize: 10,
       color: AppColors.textMuted,
@@ -646,7 +646,7 @@ class _BarChartPainter extends CustomPainter {
       topPad,
     );
 
-    // ── Bars ─────────────────────────────────────────────────────────────
+    // ── Bars ───
     const int count = 7;
     const double barGapRatio = 0.35;
     final double slotWidth = chartWidth / count;

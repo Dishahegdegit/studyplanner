@@ -45,9 +45,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     super.dispose();
   }
 
-  // ---------------------------------------------------------------------------
   // Helpers
-  // ---------------------------------------------------------------------------
 
   /// Formats a DateTime to the same format used in TaskModel.date: "dd MMM yyyy".
   String _dateStr(DateTime d) => DateFormat("dd MMM yyyy").format(d);
@@ -84,6 +82,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     final query = searchQuery.toLowerCase();
     var result = tasks.where((task) {
       // Date filter (from weekly strip selection)
+
       if (selectedDateStr != null && task.date != selectedDateStr) {
         return false;
       }
@@ -117,9 +116,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     return result;
   }
 
-  // ---------------------------------------------------------------------------
   // Task CRUD
-  // ---------------------------------------------------------------------------
+
 
   Future<void> _addTask(BuildContext context) async {
     final Map<String, dynamic>? result =
@@ -173,7 +171,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
               child: const Text("Cancel")),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.winePlum, foregroundColor: Colors.white),
+                backgroundColor: AppColors.lobsterPink, foregroundColor: Colors.white),
             onPressed: () => Navigator.pop(context, true),
             child: const Text("Delete"),
           ),
@@ -187,9 +185,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     await taskService.toggleTaskCompletion(task.id, !task.completed);
   }
 
-  // ---------------------------------------------------------------------------
+
   // Dialogs / Sheets
-  // ---------------------------------------------------------------------------
+
 
   void _showNotificationsDialog(BuildContext context, List<TaskModel> tasks) {
     final now = DateTime.now();
@@ -197,7 +195,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     for (final task in tasks) {
       final taskTime = _getTaskDateTime(task);
       if (taskTime != null) {
-        final reminderTime = taskTime.subtract(const Duration(minutes: 15));
+        final reminderTime = taskTime.subtract(const Duration(minutes: 10));
         if (reminderTime.isBefore(now)) {
           received.add(MapEntry(task, reminderTime));
         }
@@ -254,9 +252,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     );
   }
 
-  // ---------------------------------------------------------------------------
+
   // Weekly Calendar Strip
-  // ---------------------------------------------------------------------------
 
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
@@ -373,9 +370,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     );
   }
 
-  // ---------------------------------------------------------------------------
+
   // Task list builder
-  // ---------------------------------------------------------------------------
+
 
   Widget _taskList(
     BuildContext context,
@@ -476,7 +473,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             for (final task in tasks) {
               final taskTime = _getTaskDateTime(task);
               if (taskTime != null) {
-                final rem = taskTime.subtract(const Duration(minutes: 15));
+                final rem = taskTime.subtract(const Duration(minutes: 10));
                 if (rem.isBefore(now)) receivedCount++;
               }
             }
@@ -526,10 +523,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 ),
                 body: Column(
                   children: [
-                    // ── Weekly Calendar Strip (Only for Active Tab) ──────────
+                    // ── Weekly Calendar Strip (Only for Active Tab)
                     if (showCalendar) _buildWeeklyStrip(tasks),
 
-                    // ── Search + Filter bar ────────────────────────────────
+                    // ── Search + Filter bar
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
                       child: Row(
@@ -609,7 +606,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       ),
                     ),
 
-                    // ── Tab views ──────────────────────────────────────────
+                    //  Tab views
                     Expanded(
                       child: TabBarView(
                         controller: _tabController,

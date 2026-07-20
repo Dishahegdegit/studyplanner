@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/task_model.dart';
@@ -232,71 +232,83 @@ value;
 ),
 
 const SizedBox(height: 18),
-  ListTile(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    tileColor: AppColors.card,
-    leading: Icon(
-      Icons.calendar_month,
-      color: isDark ? AppColors.linen : AppColors.lobsterPink,
-    ),
-    title: Text(
-      selectedDate == null
-          ? "Select Date"
-          : formatDate(selectedDate!),
-    ),
-    trailing: Icon(
-      Icons.arrow_drop_down,
-      color: isDark ? AppColors.linen : AppColors.textSecondary,
-    ),
+  InkWell(
     onTap: pickDate,
+    borderRadius: BorderRadius.circular(14),
+    child: InputDecorator(
+      decoration: InputDecoration(
+        labelText: 'Date',
+        prefixIcon: Icon(
+          Icons.calendar_month,
+          color: isDark ? AppColors.linen : AppColors.lobsterPink,
+        ),
+        suffixIcon: Icon(
+          Icons.arrow_drop_down,
+          color: isDark ? AppColors.linen : AppColors.textSecondary,
+        ),
+      ),
+      child: Text(
+        selectedDate == null ? '' : formatDate(selectedDate!),
+        style: TextStyle(
+          color: isDark ? AppColors.linen : AppColors.midnightViolet,
+          fontSize: 15,
+        ),
+      ),
+    ),
   ),
 
   const SizedBox(height: 12),
 
-  ListTile(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    tileColor: AppColors.card,
-    leading: Icon(
-      Icons.access_time,
-      color: isDark ? AppColors.linen : AppColors.lobsterPink,
-    ),
-    title: Text(
-      startTime == null
-          ? "Start Time"
-          : formatTime(startTime!),
-    ),
-    trailing: Icon(
-      Icons.arrow_drop_down,
-      color: isDark ? AppColors.linen : AppColors.textSecondary,
-    ),
+  InkWell(
     onTap: pickStartTime,
+    borderRadius: BorderRadius.circular(14),
+    child: InputDecorator(
+      decoration: InputDecoration(
+        labelText: 'Start Time',
+        prefixIcon: Icon(
+          Icons.access_time,
+          color: isDark ? AppColors.linen : AppColors.lobsterPink,
+        ),
+        suffixIcon: Icon(
+          Icons.arrow_drop_down,
+          color: isDark ? AppColors.linen : AppColors.textSecondary,
+        ),
+      ),
+      child: Text(
+        startTime == null ? '' : formatTime(startTime!),
+        style: TextStyle(
+          color: isDark ? AppColors.linen : AppColors.midnightViolet,
+          fontSize: 15,
+        ),
+      ),
+    ),
   ),
 
   const SizedBox(height: 12),
 
-  ListTile(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    tileColor: AppColors.card,
-    leading: Icon(
-      Icons.schedule,
-      color: isDark ? AppColors.linen : AppColors.winePlum,
-    ),
-    title: Text(
-      endTime == null
-          ? "End Time"
-          : formatTime(endTime!),
-    ),
-    trailing: Icon(
-      Icons.arrow_drop_down,
-      color: isDark ? AppColors.linen : AppColors.textSecondary,
-    ),
+  InkWell(
     onTap: pickEndTime,
+    borderRadius: BorderRadius.circular(14),
+    child: InputDecorator(
+      decoration: InputDecoration(
+        labelText: 'End Time',
+        prefixIcon: Icon(
+          Icons.schedule,
+          color: isDark ? AppColors.linen : AppColors.winePlum,
+        ),
+        suffixIcon: Icon(
+          Icons.arrow_drop_down,
+          color: isDark ? AppColors.linen : AppColors.textSecondary,
+        ),
+      ),
+      child: Text(
+        endTime == null ? '' : formatTime(endTime!),
+        style: TextStyle(
+          color: isDark ? AppColors.linen : AppColors.midnightViolet,
+          fontSize: 15,
+        ),
+      ),
+    ),
   ),
 
   const SizedBox(height: 18),
@@ -397,7 +409,7 @@ DropdownButtonFormField<String>(
 );
 }
 
-  /// Schedules a local notification 15 minutes before the task starts.
+  /// Schedules a local notification 10 minutes before the task starts.
   /// Silently skips if the reminder time is already in the past.
   Future<void> _scheduleReminder({
     required String title,
@@ -416,8 +428,8 @@ DropdownButtonFormField<String>(
         start.minute,
       );
 
-      // Reminder fires 15 minutes before start
-      final reminderTime = startDateTime.subtract(const Duration(minutes: 15));
+      // Reminder fires 10 minutes before start
+      final reminderTime = startDateTime.subtract(const Duration(minutes: 10));
 
       // Don't schedule if the time has already passed
       if (reminderTime.isBefore(DateTime.now())) return;
@@ -439,7 +451,7 @@ DropdownButtonFormField<String>(
       await NotificationService.scheduleNotification(
         id: notifId,
         title: '⏰ Upcoming Study Session',
-        body: '$title · $subjectName starts in 15 minutes!',
+        body: '$title · $subjectName starts in 10 minutes!',
         scheduledTime: reminderTime,
       );
     } catch (_) {

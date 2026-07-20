@@ -1,9 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
 import '../models/pomodoro_model.dart';
+import '../services/notification_service.dart';
 import '../services/pomodoro_service.dart';
 import '../utils/app_colors.dart';
 import '../widgets/timer_circle.dart';
@@ -171,30 +173,35 @@ setState(() {});
 
 Future<void> sessionCompleted() async {
 
-if (!isBreak) {
+  // 1. Fire notification with sound (same channel as task reminders)
+  _fireSessionCompleteNotification();
 
-await pomodoroService.saveSession(
+  // 2. Haptic vibration
+  HapticFeedback.heavyImpact();
 
-PomodoroModel(
+  if (!isBreak) {
 
-id: "",
+    await pomodoroService.saveSession(
 
-minutes: selectedMinutes,
+      PomodoroModel(
 
-completed: true,
+        id: "",
 
-date: DateFormat(
-"dd MMM yyyy",
-).format(DateTime.now()),
-),
+        minutes: selectedMinutes,
 
-);
+        completed: true,
 
-completedToday++;
+        date: DateFormat(
+          "dd MMM yyyy",
+        ).format(DateTime.now()),
+      ),
+    );
 
-minutesToday += selectedMinutes;
+    completedToday++;
 
-}
+    minutesToday += selectedMinutes;
+
+  }
 
 if (!mounted) return;
 
@@ -253,6 +260,29 @@ isBreak
 );
 },
 );
+}
+
+void _fireSessionCompleteNotification() {
+  final bool wasBreak = isBreak;
+  NotificationService.flutterLocalNotificationsPlugin.show(
+    99999,
+    wasBreak ? '☕ Break Over!' : '🎉 Pomodoro Complete!',
+    wasBreak
+        ? 'Break finished. Ready to focus again?'
+        : 'Great work! You completed a $selectedMinutes-minute session.',
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'study_channel',
+        'Study Reminders',
+        channelDescription: 'Notifications for upcoming study sessions',
+        importance: Importance.max,
+        priority: Priority.high,
+        icon: '@mipmap/ic_launcher',
+        playSound: true,
+        enableVibration: true,
+      ),
+    ),
+  );
 }
 
 @override

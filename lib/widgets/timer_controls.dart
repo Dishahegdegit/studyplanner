@@ -29,6 +29,8 @@ class TimerControls extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.lobsterPink,
               foregroundColor: Colors.white,
+              disabledBackgroundColor: AppColors.lobsterPink,
+              disabledForegroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
             onPressed: isRunning
@@ -50,6 +52,8 @@ class TimerControls extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.winePlum,
               foregroundColor: Colors.white,
+              disabledBackgroundColor: AppColors.winePlum,
+              disabledForegroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
             onPressed: isRunning ? onPause : null,

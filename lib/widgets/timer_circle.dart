@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_theme.dart';
 
 class TimerCircle extends StatelessWidget {
   final int secondsLeft;
@@ -28,42 +29,37 @@ class TimerCircle extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-
           SizedBox(
             width: 260,
             height: 260,
-              child: CircularProgressIndicator(
-                value: progress,
-                strokeWidth: 12,
-                backgroundColor: AppColors.cardSecondary.withValues(alpha: 0.4),
-                valueColor: AlwaysStoppedAnimation(
+            child: CircularProgressIndicator(
+              value: progress,
+              strokeWidth: 12,
+              backgroundColor: AppColors.cardSecondary.withValues(alpha: 0.4),
+              valueColor: const AlwaysStoppedAnimation(
                 AppColors.lobsterPink,
-                ),
               ),
             ),
-
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
-              Icon(
+              const Icon(
                 Icons.local_fire_department,
                 color: AppColors.lobsterPink,
                 size: 50,
               ),
-
               const SizedBox(height: 12),
-
               Text(
                 formatTime(),
-                style: const TextStyle(
-                  fontSize: 42,
+                style: TextStyle(
+                  fontSize: 48,
                   fontWeight: FontWeight.bold,
+                  color: ThemeManager.isDark ? Colors.white : Colors.black,
+                  letterSpacing: 2,
                 ),
               ),
-
               const SizedBox(height: 10),
-
               Text(
                 "Focus Time",
                 style: TextStyle(

@@ -52,18 +52,13 @@ class AppColors {
   static const Color surfaceTint = Color(0x19D44D5C);
   static const Color surfaceTintDark = Color(0x33160029);
 
-  // Gradient background containing all colors, with light/dark colors prominent respectively
   static Decoration getBackgroundDecoration() {
     if (ThemeManager.isDark) {
       return const BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            midnightViolet,
-            midnightViolet,
-            winePlum,
-            Color(0x99D44D5C), // Lobster Pink
-            Color(0x24E3B5A4), // Almond Silk (very soft)
-            Color(0x14F5E9E2), // Linen (very soft)
+            Color(0xFF0D0617), // Near-black violet
+            midnightViolet,    // Deep midnight violet
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomRight,
@@ -76,9 +71,7 @@ class AppColors {
             Color(0xFFEAD4CA),
             Color(0xFFE0C1B6),
             Color(0xFFD7A8A4),
-            Color(0x7AD44D5C), // Lobster Pink (soft)
-            Color(0x29773344), // Wine Plum (soft)
-            Color(0x14160029), // Midnight Violet (soft)
+            Color(0x52D44D5C), // Lobster Pink (soft)
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomRight,

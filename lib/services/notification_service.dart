@@ -227,7 +227,7 @@ class NotificationService {
           timePart.minute,
         );
 
-        final reminderTime = startDateTime.subtract(const Duration(minutes: 15));
+        final reminderTime = startDateTime.subtract(const Duration(minutes: 10));
         if (reminderTime.isAfter(now)) {
           final int notifId = task.id.hashCode.abs() % 100000;
           activeNotifIds.add(notifId);
@@ -235,7 +235,7 @@ class NotificationService {
           await scheduleNotification(
             id: notifId,
             title: '⏰ Upcoming Study Session',
-            body: '${task.title} · ${task.subjectName} starts in 15 minutes!',
+            body: '${task.title} · ${task.subjectName} starts in 10 minutes!',
             scheduledTime: reminderTime,
           );
         }
