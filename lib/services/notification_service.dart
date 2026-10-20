@@ -234,7 +234,7 @@ class NotificationService {
 
           await scheduleNotification(
             id: notifId,
-            title: '⏰ Upcoming Study Session',
+            title: 'Upcoming Study Session',
             body: '${task.title} · ${task.subjectName} starts in 10 minutes!',
             scheduledTime: reminderTime,
           );

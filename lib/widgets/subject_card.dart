@@ -136,7 +136,7 @@ class SubjectCard extends StatelessWidget {
                     ),
                     if (isGoalAchieved)
                       const Text(
-                        "Goal Achieved 🎉",
+                        "Goal Achieved",
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

@@ -11,6 +11,7 @@ import '../services/task_service.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 import '../widgets/dashboard_card.dart';
+import 'ai_assistant_screen.dart';
 import 'pomodoro_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -265,17 +266,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(22),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    AppColors.lobsterPink,
-                                    AppColors.winePlum,
-                                  ],
-                                ),
+                                color: AppColors.lobsterPink,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.winePlum.withValues(alpha: 0.35),
+                                    color: AppColors.lobsterPink.withValues(alpha: 0.35),
                                     blurRadius: 10,
-                                    offset: Offset(0, 5),
+                                    offset: const Offset(0, 5),
                                   ),
                                 ],
                               ),
@@ -284,12 +280,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Container(
                                     padding: const EdgeInsets.all(15),
                                     decoration: BoxDecoration(
-                                      color: AppColors.almondSilk.withValues(alpha: 0.18),
+                                      color: Colors.white.withValues(alpha: 0.2),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
                                       Icons.local_fire_department,
-                                      color: AppColors.linen,
+                                      color: Colors.white,
                                       size: 35,
                                     ),
                                   ),
@@ -302,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           "Start Focus Session",
                                           style: TextStyle(
-                                            color: AppColors.linen,
+                                            color: Colors.white,
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -311,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Text(
                                           "Stay focused and achieve your study goals.",
                                           style: TextStyle(
-                                            color: AppColors.almondSilk,
+                                            color: AppColors.linen,
                                             fontSize: 15,
                                           ),
                                         ),
@@ -320,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   const Icon(
                                     Icons.arrow_forward_ios,
-                                    color: AppColors.linen,
+                                    color: Colors.white,
                                   ),
                                 ],
                               ),
@@ -431,6 +427,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
+        floatingActionButton: Builder(
+          builder: (context) {
+            final bool isDark = Theme.of(context).brightness == Brightness.dark;
+            // Light: deep winePlum with linen icon — high contrast on the pink gradient bg
+            // Dark:  linen cream with winePlum icon — pops on the dark violet bg
+            final Color bg = isDark ? AppColors.linen : AppColors.winePlum;
+            final Color iconCol = isDark ? AppColors.winePlum : AppColors.linen;
+
+            return Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: (isDark ? AppColors.linen : AppColors.winePlum)
+                        .withValues(alpha: isDark ? 0.25 : 0.55),
+                    blurRadius: 16,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: FloatingActionButton(
+                elevation: 0,
+                backgroundColor: bg,
+                foregroundColor: iconCol,
+                tooltip: 'AI Assist',
+                shape: const CircleBorder(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AIAssistantScreen(),
+                    ),
+                  );
+                },
+                child: Icon(Icons.auto_awesome, color: iconCol, size: 24),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

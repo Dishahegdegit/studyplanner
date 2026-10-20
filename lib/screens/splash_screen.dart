@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart'; //for flutter widgets
-import '../core/auth_gate.dart';  //next screen to navigate
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login_screen.dart';
+import 'bottom_nav_screen.dart';
 import '../utils/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,13 +19,27 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateNext() async {
-    await Future.delayed(const Duration(seconds: 1)); //wait 1 second and continue
+    // Show splash for a brief moment, then check login state.
+    // Firebase.initializeApp() is already done in main() before runApp(),
+    // so currentUser is fully loaded and reliable by the time we get here.
+    await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const AuthGate()), //creating new page whose widget is auth gate
-    );
+    // Direct synchronous check — no streams, no listeners, no race conditions.
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Session exists on device — go straight to home
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+      );
+    } else {
+      // No session — show login
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
   }
 
   @override

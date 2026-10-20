@@ -226,7 +226,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       leading: const Icon(Icons.notifications,
                           color: AppColors.lobsterPink),
                       title: Text(
-                        "⏰ ${task.title} (${task.subjectName})",
+                        "${task.title} (${task.subjectName})",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,

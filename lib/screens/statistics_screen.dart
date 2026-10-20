@@ -281,7 +281,7 @@ class StatisticsScreen extends StatelessWidget {
                                               ),
                                             ),
                                             if (achieved)
-                                              Text('🎉 Goal Achieved!',
+                                              Text('Goal Achieved!',
                                                   style: TextStyle(
                                                       fontSize: 12,
                                                       color: primaryAccent,

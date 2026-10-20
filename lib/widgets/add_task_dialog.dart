@@ -450,7 +450,7 @@ DropdownButtonFormField<String>(
 
       await NotificationService.scheduleNotification(
         id: notifId,
-        title: '⏰ Upcoming Study Session',
+        title: 'Upcoming Study Session',
         body: '$title · $subjectName starts in 10 minutes!',
         scheduledTime: reminderTime,
       );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import 'bottom_nav_screen.dart';
 import '../utils/app_colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -69,8 +70,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (!mounted) return;
 
-    if (error == null) { // means successful signup
-      Navigator.pop(context); //after signup remove tht screen
+    if (error == null) {
+      // Signup succeeded -> go to home screen directly, clear auth history
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+        (route) => false,
+      );
     } else {
       setState(() {
         _isLoading = false;
@@ -218,7 +223,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 ),
                                 child: const Text(
-                                  "Create Account",
+                                  "Sign Up",
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
@@ -226,18 +231,24 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                               ),
                             ),
-                      const SizedBox(height: 15),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Already have an account? Log In",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
+                      const SizedBox(height: 18),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Already have an account?"),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Log In",
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),

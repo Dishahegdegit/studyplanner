@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'signup_screen.dart';
+import 'bottom_nav_screen.dart';
 import '../utils/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _isLoading = false; //initially no login so no loading
+  bool _isLoading = false;
   String? _errorMessage;
 
   Future<void> _handleLogin() async {
@@ -48,15 +49,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!mounted) return;
 
-    setState(() {
-      _isLoading = false;
-      _errorMessage = error;
-    });
+    if (error == null) {
+      // Login succeeded -> go to home screen directly
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const BottomNavScreen()),
+      );
+    } else {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = error;
+      });
+    }
   }
 
   @override
   void dispose() {
-    _emailController.dispose();    //Controllers use memory.When screen closes they should be destroyed.
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
